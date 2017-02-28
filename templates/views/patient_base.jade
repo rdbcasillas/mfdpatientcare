@@ -1,0 +1,27 @@
+extends layout
+
+block navcontent
+  .collapse.navbar-collapse.navbar-ex1-collapse
+    - var patientActive = ''
+    - var historyActive = ''
+    - var vitalsActive = ''
+    case locals.section
+      when "patient"
+        - patientActive = 'active'
+      when "history"
+        - historyActive = 'active'
+      when "questionnaire"
+        - vitalsActive = 'active'
+    ul.nav.navbar-nav.side-nav
+      li(class='#{patientActive}')
+        a(href='/patient/#{patient._id}')
+          i.fa.fa-fw.fa-dashboard
+          | #{patient.name.full}
+      li(class='#{historyActive}')
+        a(href='/patient/#{patient._id}/history')
+          i.fa.fa-fw.fa-table
+          | Patient History
+      li(class='#{vitalsActive}')
+        a(href='/patient/#{patient._id}/new_vitals')
+          i.fa.fa-fw.fa-edit
+          | Update Vitals

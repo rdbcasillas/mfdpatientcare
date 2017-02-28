@@ -1,0 +1,47 @@
+extends sb_base
+
+block content  
+  #page-wrapper
+    .container-fluid
+        .row
+          .col-lg-6
+            h1 Patient List
+            .table-responsive
+              table#example.table(width="100%", cellspacing="10")
+                thead
+                  tr
+                    th Name
+                    th Gender
+                    th DOB
+                    th Phone
+                tbody 
+                  - var trstatus = ''
+                  
+                      
+                  each patient in key
+                    case patient.status
+                      when "danger"
+                        - trstatus = 'danger'
+                      when "warning"
+                        - trstatus = 'warning'
+                      when "safe"
+                        - trstatus = 'success'
+                      default
+                        - trstatus = 'info'
+                    tr(class = "#{trstatus}")
+                      td
+                        a(href = '/patient/' + patient.patient.id)=patient.patient.name.full
+                      td=patient.patient.gender
+                      td=patient.patient.dob.toDateString()
+                      td=patient.patient.cellPhone
+                    
+
+                  
+block scriptcontent
+  script(type = 'text/javascript').
+    $('#example').DataTable({
+      ordering : true,
+      searching : true
+    });
+  
+

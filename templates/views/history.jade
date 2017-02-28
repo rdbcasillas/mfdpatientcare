@@ -1,0 +1,11 @@
+extends patient_base
+
+block content
+  #page-wrapper
+    .row
+      .col-lg-12
+        h1.page-header= patient.name.full + "    "
+    .row
+      .panel-group(id='accordion', role='tablist', aria-multiselectable='true')
+      each field in fields
+        include historyPanel

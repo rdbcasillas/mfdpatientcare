@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h1=title
+    - var a = 33
+    p= 'Hello' + user.username + '!'
+    if a == 312 
+        p First if called
+    else if a == 219
+        p Second if was called
+    else
+        p Third if was called
+    - var patients = {patient1 : 'Lara', patient2 : 'Sanath', patient3: 'Mahanama'}
+
+    h5= patients.patient1
+    each patient in patients
+        include test

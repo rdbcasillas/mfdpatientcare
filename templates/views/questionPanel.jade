@@ -1,0 +1,23 @@
+.panel-heading
+  h3.panel-title=field.question.question
+.panel-body
+  .row
+    .col-xs-3
+      case field.status
+        when 'danger'
+          i.fa.fa-exclamation.fa-4x
+        when 'warning'
+          i.fa.fa-warning.fa-4x
+        when 'safe'
+          i.fa.fa-check.fa-4x
+        default
+          i.fa.fa-info.fa-4x
+    .col-xs-9.text-right
+      .huge=field.answers[0].answer
+      div=field.answers[0].date.toDateString()
+a(href='#'+field.question.label+'title')
+  .panel-footer
+    span.pull-left View Details
+    span.pull-right
+      i.fa.fa-arrow-circle-right
+    .clearfix  

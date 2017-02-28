@@ -1,0 +1,89 @@
+doctype
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title SB Admin - Bootstrap Admin Template
+    //
+       Bootstrap Core CSS 
+    link(href='/styles/bootstrap/bootstrap.min.css', rel='stylesheet')
+    //
+       Custom CSS 
+    link(href='/styles/bootstrap/sb-admin.css', rel='stylesheet')
+    //
+        Morris
+    link(href ='/styles/bootstrap/morris.css', rel = 'stylesheet')
+    link(href = '/styles/jquery.dataTables.css', rel = 'stylesheet')
+    link(href = '/styles/bootstrap/dataTables.bootstrap.css', rel = 'stylesheet')
+    //
+       Custom Fonts 
+    link(href='/font-awesome-4.2.0/css/font-awesome.min.css', rel='stylesheet', type='text/css')
+    
+    block css
+    
+    script(src='/js/lib/jquery/jquery-1.11.1.min.js')
+    //
+       Bootstrap Core JavaScript 
+    script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
+    script(src = '/js/lib/jquery/jquery.dataTables.min.js')
+    script(src = '/js/lib/bootstrap/dataTables.bootstrap.js')
+    //
+        Morris js
+    script(src = '/js/morris/morris-data.js')
+    script(src = '/js/morris/morris.min.js')
+    script(src = '/js/morris/raphael.min.js')
+    script(src='https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAr1qAP9HAR9nZpTyBa2nPlpvZOCwxfbRc')
+    
+    block script
+    
+  body
+    #wrapper
+      nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-ex1-collapse')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+        - var homeActive = ''
+        - var mapActive = ''
+        case locals.section
+          when "list"
+            - homeActive = 'active'
+          when "map"
+            - mapActive = 'active'
+            
+        ul.nav.navbar-nav.top-nav
+          li(class='#{homeActive}')
+           a.navbar-brand(href='/') #{locals.title}
+          if user.isAdmin
+            li(class='#{mapActive}')
+              a.navbar-brand(href='/map')
+                i.fa.fa-map-marker
+        ul.nav.navbar-right.top-nav
+          li.dropdown
+            a.dropdown-toggle(href='#', data-toggle='dropdown')
+              i.fa.fa-user
+              span &nbsp; #{user.name.first}
+              b.caret
+            ul.dropdown-menu
+              if user.isAdmin
+                li
+                  a(href='/keystone')
+                    i.fa.fa-fw.fa-gears
+                    | Admin
+                li.divider
+              li
+                a(href='#{signout_url}')
+                  i.fa.fa-fw.fa-power-off
+                  | Log Out
+                
+        block navcontent
+      block content
+      block scriptcontent   
+      
+    
+        

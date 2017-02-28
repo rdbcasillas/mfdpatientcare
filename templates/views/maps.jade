@@ -1,0 +1,150 @@
+extends sb_base
+
+append css
+  style(type="text/css").
+    html {height: 100%; width:100%;}
+    body {height: 100%; width:100%;}
+    #wrapper {height: 100%; width:100%;}
+    #map-canvas {height: 100%; width:100%;}
+
+append script
+        script(src='/js/lib/jquery/jquery-1.11.1.min.js')
+        script(src='https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAr1qAP9HAR9nZpTyBa2nPlpvZOCwxfbRc')
+        script(src='http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js')
+        script(type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js")
+        -var add = key
+        script(type = 'text/javascript').
+            var map;
+            var service;
+            var currentLocation;
+        script(type = 'text/javascript').
+            var addr = !{JSON.stringify(add)}
+            var patientNames = [];
+        
+            for (j = 0; j < addr.length; j++){
+                patientNames.push(addr[j].name.first); 
+                console.log(patientNames);
+                }
+
+        script(type= 'text/javascript').
+            var patients = !{JSON.stringify(add)};
+            var markers = [];
+            var marker;
+            var infobubble;
+
+            function initialize(location){
+                currentLocation = new google.maps.LatLng(location.coords.latitude, location.coords.longitude);
+                geocoder = new google.maps.Geocoder();
+                var mapOptions = {
+                      center: currentLocation,
+                      zoom: 16
+                };
+                map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+                var trafficLayer = new google.maps.TrafficLayer();
+                trafficLayer.setMap(map);
+                marker = new google.maps.Marker({
+                    position : currentLocation,
+                    map : map
+                    });
+                service = new google.maps.places.PlacesService(map);
+                 
+                var infoWindow = new google.maps.InfoWindow({
+                    content : 'My Location'
+                });
+                google.maps.event.addListener(marker, 'mouseover', function(){
+                    infoWindow.open(map, this);
+                })
+                google.maps.event.addListener(marker, 'mouseout', function(){
+                    infoWindow.close(map, this);
+                })
+                infobubble = new InfoBubble({
+                    maxwidth : 300
+                })
+                var tempMarker; 
+                var names = [];
+                google.maps.event.addListenerOnce(map, 'bounds_changed', codeAddress);
+                for(i=0; i < patients.length;i++){
+                    names.push(patients[0].patient.name.first);
+                }
+                var currentName = '';
+                var contentString = '';
+                var currentAddress = '';
+                var imagePath = '';
+                var currentId = null;
+                function codeAddress(){
+                for(var i=0; i < patients.length; i++){
+                   console.log(patients[i]);
+                   var patient = patients[i].patient;
+                   
+                   var status = patients[i].status; // Use this status variable in the map
+                   var question = patients[i].question;
+                   currentName = patient.name.first;
+                   currentLink = '/patient/' + patient._id;
+                   currentAddress = patient.address.street1 + ', ' +
+                   patient.address.suburb + ', ' + patient.address.postcode + ', ' + patient.address.country;
+                   if (status == 'safe'){
+                       imagePath = '/green.png'
+                   }
+                   else if(status == 'warning'){
+                       imagePath = '/yellow.png'
+                   }
+                   else if(status == 'danger'){
+                       imagePath = '/red.gif'
+                    }
+                   else {
+                       imagePath = '/blue.png'
+                   }
+                   
+                   (function(patient, titl, titl2, image,questionValue,link){
+                   geocoder.geocode({ 'address' : currentAddress},
+                   function(results, status){
+                       marker = new google.maps.Marker({
+                       position : results[0].geometry.location,
+                       map : map,
+                       icon : image,
+                       title: titl2
+                       });
+                       markers.push(this.marker);
+                       contentString = '<div style="margin: 5px">' +
+                           '<h4>' + titl2 + '</h4>' +
+                          
+                           '<h4 style = "color : red">Address: </h4>' + titl +  
+
+                           '<h4>Health Status: ' + questionValue + '</h4>' +
+                           '<h5><a href =' + link + '>Go to Patient Page</a></h5>' +
+                           '</div>';
+                       var markerCluster = new MarkerClusterer(map, markers);
+                       console.log(contentString);
+                       
+                      
+                       var infobubble = new InfoBubble({
+                           content : contentString,
+                           padding: 0
+                       });
+                       
+                       google.maps.event.addListener(marker, 'click', function(){
+                              infobubble.open(map, this);
+                       })
+                       
+                      /* 
+                       $(function() {
+                             $('.content').popover({placement: 'right'});
+                       });
+                       
+                       if (i2>=5){
+                            console.log(markers);
+                            var markerCluster = new MarkerClusterer(map, this.markers);
+                       }
+                       */
+                })
+                })(patient, currentAddress, currentName, imagePath, question, currentLink);
+                }
+            } 
+            }
+            $(document).ready(function(){
+                navigator.geolocation.getCurrentPosition(initialize);
+                //$('#example').popover();
+               });
+
+block content
+  #map-canvas

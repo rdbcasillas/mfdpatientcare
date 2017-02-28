@@ -1,0 +1,10 @@
+extends welcome
+block content
+    h1 Please login below
+    form(method = 'post')
+        input(name = 'username', class = 'input-block-level',
+        placeholder = 'username')
+        input(name = 'password', type = 'password',  class = 'input-block-level',
+        placeholder = 'password')
+        input(type = 'submit', class = 'btn btn-primary', value = 'Log In')
+        

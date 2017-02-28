@@ -1,0 +1,29 @@
+.panel-heading
+  h3.panel-title
+    h3 Demographic Info
+.panel-body
+  ul.list-group
+    li.list-group-item(href='#')
+      .row
+        .col-xs-3
+          i.fa.fa-birthday-cake.fa-2x
+        .col-xs-9.text-right  
+          h4=patient.dob.toDateString()
+    li.list-group-item(href='#')
+      .row
+        .col-xs-3
+          i.fa.fa-mobile.fa-2x
+        .col-xs-9.text-right 
+          h4=patient.cellPhone
+    li.list-group-item(href='#')
+      .row
+        .col-xs-3
+          i.fa.fa-phone.fa-2x
+        .col-xs-9.text-right  
+          h4=patient.homePhone 
+    li.list-group-item(href='#')
+      .row
+        .col-xs-3
+          i.fa.fa-home.fa-2x
+        .col-xs-9.text-right  
+          h5=patient.strAddress

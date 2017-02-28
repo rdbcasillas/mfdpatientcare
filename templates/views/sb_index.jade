@@ -1,0 +1,111 @@
+extends patient_base
+
+block content
+  #page-wrapper
+    .row
+      .col-lg-12
+        h1.page-header= patient.name.full + "    "
+          if patient.gender == 'Male'
+            i.fa.fa-male.fa-1x
+          else
+            i.fa.fa-female.fa-1x
+        .col-lg-4
+          case patientStatus
+            when 'danger'
+              .panel.panel-red
+                include demographicPanel
+            when 'warning'
+              .panel.panel-yellow
+                include demographicPanel
+            when 'safe'
+              .panel.panel-green
+                include demographicPanel
+            default
+              .panel.panel-primary
+                include demographicPanel
+        .col-lg-8
+          #map-canvas(style="width: 100%; height: 450px")
+          br
+            
+            
+    .row
+      each field in fields
+        .col-lg-3.col-md-6
+          case field.status
+            when 'danger'
+              .panel.panel-red
+                include questionPanel
+            when 'warning'
+              .panel.panel-yellow
+                include questionPanel
+            when 'safe'
+              .panel.panel-green
+                include questionPanel
+            default
+              .panel.panel-primary
+                include questionPanel
+    
+    .row
+      each field in fields
+        .col-md-6(id = field.question.label+'title')
+          .panel.panel-default
+            .panel-heading
+              h3.panel-title
+                i.fa.fa-bar-chart-o.fa-fw
+                |#{field.question.question}
+            .panel-body
+                div(id =field.question.label)
+    .clear-fix
+    .row
+
+block scriptcontent
+  -var i = 0;
+  script(type = 'text/javascript'). 
+    var jadefield = !{JSON.stringify(fields)};
+    var patientstuff = !{JSON.stringify(patient)};
+    var status = !{JSON.stringify(patientStatus)};
+    var imagePath = '';
+    for(var i=0;i<jadefield.length;i++){
+      Morris.Area({
+        element: jadefield[i].question.label,
+        data: jadefield[i].answers,
+        xkey: 'date',
+        ykeys: ['answer'],
+        labels: [jadefield[i].question.question],
+        pointSize: 2,
+        hideHover: 'auto',
+        resize: true
+      });
+    }
+    function initialize(location){
+      currentLocation = new google.maps.LatLng(patientstuff.address.geo[1], patientstuff.address.geo[0]);
+      geocoder = new google.maps.Geocoder();
+      var mapOptions = {
+            center: currentLocation,
+            zoom: 16
+      };
+      var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+      
+       if (status == 'safe'){
+           imagePath = '/green.png'
+       }
+       else if(status == 'warning'){
+           imagePath = '/yellow.png'
+       }
+       else if(status == 'danger'){
+           imagePath = '/red.gif'
+        }
+       else {
+           imagePath = '/blue.png'
+       }
+      marker = new google.maps.Marker({
+        position : currentLocation,
+        map : map,
+        icon : imagePath, 
+        title : status
+        });
+      
+      }
+    
+    navigator.geolocation.getCurrentPosition(initialize);
+    

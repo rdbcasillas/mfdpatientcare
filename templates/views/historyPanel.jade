@@ -1,0 +1,29 @@
+.col-md-6.col-md-offset-3
+  .panel.panel-default
+    .panel-heading(role='tab', id='heading-#{field.question.label}')
+      h3.panel-title
+        a(
+        	data-toggle='collapse',
+        	data-parent='#accordion',
+			href='#collapse-#{field.question.label}',
+			aria-expanded="false", 
+			aria-controls="collapse-#{field.question.label}",
+			data-target='#collapse-#{field.question.label}'
+		)
+          span #{field.question.question}
+        span.pull-right
+          a(href='/patient/#{patient._id}/download/#{field.question.label}')
+            i.fa.fa-download
+    .panel-collapse.collapse(
+    		id='collapse-#{field.question.label}',
+    		role='tabpanel',
+    		aria-labelledby='heading-#{field.question.label}')
+      .panel-body
+        table.table
+          for answer in field.answers
+            tr
+              td= answer.date.toDateString()
+              td= answer.answer
+      
+
+//      div(id='table-#{field.question.label}')

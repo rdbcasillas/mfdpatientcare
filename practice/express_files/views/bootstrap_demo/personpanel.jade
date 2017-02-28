@@ -1,0 +1,23 @@
+mixin personpanel(value)
+  div(class='panel panel-default')
+    div(class='row')
+      div(class='col-sm-3 col-md-4 col-lg-12')
+        img(src='/images/mustache.png' class='img-responsive img-rounded center-block')
+      div(class='clearfix visible-lg-block')
+      div(class='col-sm-9 col-md-8 col-lg-12 table-responsive')
+        div(class='clearfix')
+        table(class='table table-condensed')
+          thead
+            tr(class=value)
+              th: h4
+                | Jeremy Warner
+                case value
+                  when 'warning'
+                    span(class='glyphicon glyphicon-warning-sign pull-right')
+                  when 'danger'
+                    span(class='glyphicon glyphicon-exclamation-sign pull-right')
+          tbody
+            tr
+              td: | 1400 W Wisconsin Ave
+            tr
+              td: | Milwaukee, WI 53233                

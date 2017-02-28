@@ -1,0 +1,14 @@
+extends patient_base
+
+block content
+  #page-wrapper
+      .page-header
+        h1 Update Vitals
+      .row
+        .col-md-6
+          form(role = 'form',method = 'post')
+            each val in questions
+              .form-group
+                label(for='question-#{val.label}') #{val.question}
+                input(type = 'number', class = 'form-control', id = 'question-#{val.label}', name='#{val.label}')
+            button(type = 'submit', class = 'btn btn-danger') Submit
